@@ -36,7 +36,7 @@ grayscale_cpu_image = grayscale_cpu(image)
 print(f"Time processed on CPU: {time.time() - start}s")
 cv2.imwrite(f"grayscale_image_cpu.png", grayscale_cpu_image)
 
-block_size = [64]
+block_size = [64, 128, 256, 512, 1024]
 time_processed_per_block = []
 for bs in block_size:
     if pixel_count % bs == 0:
@@ -52,7 +52,6 @@ for bs in block_size:
 
     output_host = output_device.copy_to_host()
     grayscale_image = np.reshape(output_host, (height, width))
-    differences = grayscale_cpu_image != grayscale_image
     cv2.imwrite(f"grayscale_image_gpu_{bs}.png", grayscale_image)
 
 for bs, t in zip(block_size, time_processed_per_block):
