@@ -1,0 +1,103 @@
+\documentclass[12pt]{article}
+\renewcommand{\baselinestretch}{1.2}
+\usepackage[utf8]{vietnam}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{minted}
+\usepackage{ragged2e}
+\usepackage{multirow}
+\usepackage{subcaption}
+\usepackage{xurl}
+\usepackage{amsmath}
+\usepackage{makecell}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\renewcommand\theadalign{bc}
+\renewcommand\theadfont{\bfseries}
+\renewcommand\theadgape{\Gape[4pt]}
+\renewcommand\cellgape{\Gape[4pt]}
+\usepackage{pbox}
+\usepackage{graphicx}
+\usepackage{diagbox}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue,
+}
+\lstset{
+    backgroundcolor=\color{white},   
+    basicstyle=\footnotesize,       
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    commentstyle=\color{red},    
+    escapeinside={\%*}{*)},          
+    extendedchars=true,              
+    keepspaces=true,                 
+    keywordstyle=\color{blue},       
+    language=Python,                
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\begin{document}
+\begin{center}
+    \vspace*{1.8cm}
+    \Large
+    Labwork2\\
+\end{center}
+
+\noindent
+The code to show all the information is:
+
+\noindent
+\begin{lstlisting}[language=Python]
+from numba import cuda
+
+print(f"Gpu info: {cuda.detect()}")
+print(f"Cuda device: {cuda.devices}")
+print(f"Cuda gpus: {cuda.gpus}")
+print(f"Device choosen: {cuda.select_device(0)}")
+multiprocessor_count = cuda.gpus[0].MULTIPROCESSOR_COUNT
+print(f"Multiprocessor Count: {multiprocessor_count}")
+
+gpu_memory_size = cuda.current_context().get_memory_info()
+print(f"GPU Memory Size: {gpu_memory_size.total // (1024**2)} MB")
+\end{lstlisting}
+
+\noindent
+The result is: 
+
+\noindent
+\begin{lstlisting}[language=Python]
+Found 1 CUDA devices
+id 0    b'NVIDIA GeForce GTX 1650'                              [SUPPORTED]
+                      Compute Capability: 7.5
+                           PCI Device ID: 0
+                              PCI Bus ID: 1
+                                    UUID: GPU-ff854778-4efd-305e-e2a2-4e0844c56b1a
+                                Watchdog: Enabled
+             FP32/FP64 Performance Ratio: 32
+Summary:
+        1/1 devices are supported
+Gpu info: True
+Cuda device: <module 'numba.cuda.cudadrv.devices' from '/home/nuocmatcuamua/anaconda3/envs/allenv/lib/python3.8/site-packages/numba/cuda/cudadrv/devices.py'>
+Cuda gpus: <Managed Device 0>
+Device choosen: <CUDA device 0 'b'NVIDIA GeForce GTX 1650''>
+Multiprocessor Count: 16
+GPU Memory Size: 3896 MB
+\end{lstlisting}
+
+\end{document}
