@@ -15,13 +15,13 @@ input_device = cuda.to_device(image_1d)
 def grayscale_cpu(image):
     height = image.shape[0]
     width = image.shape[1]
-    image_greyscale = np.zeros((height, width), dtype=np.uint8)
+    image_grayscale = np.zeros((height, width), dtype=np.uint8)
     for h in range(height):
         for w in range(width):
-            image_greyscale[h, w] = (
-                image[h][w][0] + image[h][w][1] + image[h][w][2]
+            image_grayscale[h, w] = (
+                int(image[h][w][0]) + int(image[h][w][1]) + int(image[h][w][2])
             ) // 3
-    return image_greyscale
+    return image_grayscale
 
 
 @cuda.jit
@@ -32,11 +32,11 @@ def grayscale_gpu(src, dst):
 
 
 start = time.time()
-grayscale_image = grayscale_cpu(image)
+grayscale_cpu_image = grayscale_cpu(image)
 print(f"Time processed on CPU: {time.time() - start}s")
-cv2.imwrite(f"grayscale_image_cpu.png", grayscale_image)
+cv2.imwrite(f"grayscale_image_cpu.png", grayscale_cpu_image)
 
-block_size = [64, 128, 256, 512, 1024]
+block_size = [64]
 time_processed_per_block = []
 for bs in block_size:
     if pixel_count % bs == 0:
@@ -52,6 +52,7 @@ for bs in block_size:
 
     output_host = output_device.copy_to_host()
     grayscale_image = np.reshape(output_host, (height, width))
+    differences = grayscale_cpu_image != grayscale_image
     cv2.imwrite(f"grayscale_image_gpu_{bs}.png", grayscale_image)
 
 for bs, t in zip(block_size, time_processed_per_block):
