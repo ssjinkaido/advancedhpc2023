@@ -14,11 +14,21 @@ output_device = cuda.device_array(
 
 
 @cuda.jit
-def rgb_to_hsv(src, dst):
+def grayscale_gpu(src, dst):
     x, y = cuda.grid(2)
     if y < dst.shape[0] and x < dst.shape[1]:
         g = np.uint8((src[y, x, 0] + src[y, x, 1] + src[y, x, 2]) // 3)
         dst[y, x] = g
+
+
+@cuda.reduce
+def find_max(value, value1):
+    return max(value, value1)
+
+
+@cuda.reduce
+def find_min(value, value1):
+    return min(value, value1)
 
 
 @cuda.jit
