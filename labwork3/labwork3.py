@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 import time
 import matplotlib.pyplot as plt
+import math
 
 image = cv2.imread("../images/image.jpeg")
 image_1d = np.reshape(image, (-1, 3))
@@ -39,11 +40,7 @@ cv2.imwrite(f"grayscale_image_cpu.png", grayscale_cpu_image)
 block_size = [64, 128, 256, 512, 1024]
 time_processed_per_block = []
 for bs in block_size:
-    if pixel_count % bs == 0:
-        grid_size = pixel_count / bs
-    else:
-        grid_size = pixel_count // bs + 1
-
+    grid_size = math.ceil(pixel_count / bs)
     start = time.time()
     grayscale_gpu[grid_size, bs](input_device, output_device)
 

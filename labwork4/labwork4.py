@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import math
 
 image = cv2.imread("../images/image.jpeg")
-image_1d = np.reshape(image, (-1, 3))
 height, width, _ = image.shape
 pixel_count = height * width
 output_device = cuda.device_array(
@@ -43,7 +42,7 @@ grayscale_cpu_image = grayscale_cpu(image)
 print(f"Time processed on CPU: {time.time() - start}s")
 cv2.imwrite(f"grayscale_image_cpu.png", grayscale_cpu_image)
 
-block_size = [(4, 4), (8, 8), (16, 16), (24, 24), (32, 32)]
+block_size = [(8, 8), (16, 16), (24, 24), (32, 32)]
 time_processed_per_block = []
 for bs in block_size:
     grid_size_x = math.ceil(width / bs[0])
