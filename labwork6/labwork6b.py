@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 import time
 import math
+import argparse
 
 image = cv2.imread("../images/image.jpeg")
 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -33,10 +34,9 @@ def brightness(src, dst, threshold, brightness_type):
 
 block_size = [(8, 8), (16, 16), (24, 24), (32, 32)]
 time_processed_per_block = []
-threshold = 20
 
 
-def show_brightness_image(func, brightness_type):
+def show_brightness_image(func, brightness_type, threshold):
     for bs in block_size:
         grid_size_x = math.ceil(width / bs[0])
         grid_size_y = math.ceil(height / bs[1])
@@ -52,5 +52,16 @@ def show_brightness_image(func, brightness_type):
         cv2.imwrite(f"{brightness_str}_image.png", output_host)
 
 
-show_brightness_image(brightness, 0)
-show_brightness_image(brightness, 1)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Labwork")
+    parser.add_argument(
+        "--threshold",
+        "-th",
+        type=int,
+        default=20,
+        help="Threshold value",
+    )
+    args = parser.parse_args()
+
+    show_brightness_image(brightness, 0, args.threshold)
+    show_brightness_image(brightness, 1, args.threshold)
